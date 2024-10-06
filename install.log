@@ -1,0 +1,31 @@
+Warning: You are using macOS 12.
+We (and Apple) do not provide support for this old version.
+It is expected behaviour that some formulae will fail to build in this old version.
+It is expected behaviour that Homebrew will be buggy and slow.
+Do not create any issues about this on Homebrew's GitHub repositories.
+Do not create any issues even if you think this message is unrelated.
+Any opened issues will be immediately closed without response.
+Do not ask for help from Homebrew or its maintainers on social media.
+You may ask for help in Homebrew's discussions but are unlikely to receive a response.
+Try to figure out the problem yourself and submit a fix as a pull request.
+We will review it but may or may not accept it.
+
+==> Fetching dependencies for mongodb/brew/mongodb-community@6.0: node and mongosh
+==> Fetching node
+==> Downloading https://raw.githubusercontent.com/Homebrew/homebrew-core/ecd777bdf7d4e3f73e644467215c6ca8c41d8980/Formula/n/node.rb
+Already downloaded: /Users/anu/Library/Caches/Homebrew/downloads/1fa596c5381031e4086e83664dc3f9955298cb266011deb835cada2bb63bfbcb--node.rb
+==> Downloading https://registry.npmjs.org/npm/-/npm-10.8.3.tgz
+Already downloaded: /Users/anu/Library/Caches/Homebrew/downloads/23a982946f3151c16d375da72b67554a149212cc7b8b5299dd87b5df3d1a181f--npm-10.8.3.tgz
+==> Downloading https://nodejs.org/dist/v22.9.0/node-v22.9.0.tar.xz
+Already downloaded: /Users/anu/Library/Caches/Homebrew/downloads/cc5e214de95580592ee6e15888f0989a83016093aaf3e32f4f815e05e11aaea6--node-v22.9.0.tar.xz
+==> Fetching mongosh
+==> Downloading https://ghcr.io/v2/homebrew/core/mongosh/manifests/2.3.1
+Already downloaded: /Users/anu/Library/Caches/Homebrew/downloads/318e6f5c4e5f2306399778282b0f9d3a418f991a88636614596ce2ee994539b6--mongosh-2.3.1.bottle_manifest.json
+==> Downloading https://ghcr.io/v2/homebrew/core/mongosh/blobs/sha256:7931d8bf23a679832317022965bd5cfcbe07530bb8dc0492a9225eca1e2cd69f
+Already downloaded: /Users/anu/Library/Caches/Homebrew/downloads/7f8617910a2bedbd661633dcaac19d2c32dabfcc42431eba759fb9d6e7072034--mongosh--2.3.1.arm64_monterey.bottle.tar.gz
+==> Fetching mongodb/brew/mongodb-community@6.0
+==> Downloading https://fastdl.mongodb.org/osx/mongodb-macos-arm64-6.0.18.tgz
+Error: A `brew install mongodb-community@6.0` process has already locked /opt/homebrew/Cellar/mongodb-community@6.0.
+Please wait for it to finish or terminate it to continue.
+Already downloaded: /Users/anu/Library/Caches/Homebrew/downloads/7af6e32edf4e7c7aba9403ce00d21200e83d7ac45ef9931c9d874cc493f421e6--mongodb-macos-arm64-6.0.18.tgz
+==> Installing mongodb-community@6.0 from mongodb/brew
