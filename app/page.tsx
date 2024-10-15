@@ -1,22 +1,14 @@
-import Container from "@/app/components/Container";
-import ListingCard from "@/app/components/listings/ListingCard";
-import EmptyState from "@/app/components/EmptyState";
-
-import getListings, { 
-  IListingsParams
-} from "@/app/actions/getListings";
-import getCurrentUser from "@/app/actions/getCurrentUser";
 import ClientOnly from "./components/ClientOnly";
+import Container from "@/app/components/Container";
+import EmptyState from "@/app/components/EmptyState";
+import getListings from "@/app/actions/getListings";
+import ListingsContainer from './components/ListingsContainer';  // Import your new container
+import MapSearch from './components/MapSearch';
 
-interface HomeProps {
-  searchParams: IListingsParams
-};
+export default async function Home() {
+  const initialListings = await getListings({});
 
-const Home = async ({ searchParams }: HomeProps) => {
-  const listings = await getListings(searchParams);
-  const currentUser = await getCurrentUser();
-
-  if (listings.length === 0) {
+  if (initialListings.length === 0) {
     return (
       <ClientOnly>
         <EmptyState showReset />
@@ -27,30 +19,21 @@ const Home = async ({ searchParams }: HomeProps) => {
   return (
     <ClientOnly>
       <Container>
-        <div 
-          className="
-            pt-24
-            grid 
-            grid-cols-1 
-            sm:grid-cols-2 
-            md:grid-cols-3 
-            lg:grid-cols-4
-            xl:grid-cols-5
-            2xl:grid-cols-6
-            gap-8
-          "
-        >
-          {listings.map((listing: any) => (
-            <ListingCard
-              currentUser={currentUser}
-              key={listing.id}
-              data={listing}
-            />
-          ))}
+        <div className="flex flex-col lg:flex-row h-[calc(100vh-80px)] pt-24">
+          {/* Left half: Listings */}
+          <div className="w-full lg:w-1/2 overflow-y-auto pr-4 mb-4 lg:mb-0">
+            <ListingsContainer initialListings={initialListings.map(listing => ({
+              ...listing,
+              createdAt: listing.createdAt
+            }))} />
+          </div>
+          
+          {/* Right half: Map */}
+          <div className="w-full lg:w-1/2 h-full sticky top-24">
+            <MapSearch />
+          </div>
         </div>
       </Container>
     </ClientOnly>
-  )
+  );
 }
-
-export default Home;

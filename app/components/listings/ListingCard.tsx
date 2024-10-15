@@ -2,77 +2,23 @@
 
 import Image from "next/image";
 import { useRouter } from "next/navigation";
-import { useCallback, useMemo } from "react";
-import { format } from 'date-fns';
-
-import useCountries from "@/app/hooks/useCountries";
-import { 
-  SafeListing, 
-  SafeReservation, 
-  SafeUser 
-} from "@/app/types";
-
-import HeartButton from "../HeartButton";
-import Button from "../Button";
-import ClientOnly from "../ClientOnly";
+import { useCallback } from "react";
+import { SafeListing } from "@/app/types";
 
 interface ListingCardProps {
   data: SafeListing;
-  reservation?: SafeReservation;
-  onAction?: (id: string) => void;
-  disabled?: boolean;
-  actionLabel?: string;
-  actionId?: string;
-  currentUser?: SafeUser | null
-};
+}
 
-const ListingCard: React.FC<ListingCardProps> = ({
-  data,
-  reservation,
-  onAction,
-  disabled,
-  actionLabel,
-  actionId = '',
-  currentUser,
-}) => {
+const ListingCard: React.FC<ListingCardProps> = ({ data }) => {
   const router = useRouter();
-  const { getByValue } = useCountries();
 
-  const location = getByValue(data.locationValue);
-
-  const handleCancel = useCallback(
-    (e: React.MouseEvent<HTMLButtonElement>) => {
-    e.stopPropagation();
-
-    if (disabled) {
-      return;
-    }
-
-    onAction?.(actionId)
-  }, [disabled, onAction, actionId]);
-
-  const price = useMemo(() => {
-    if (reservation) {
-      return reservation.totalPrice;
-    }
-
-    return data.price;
-  }, [reservation, data.price]);
-
-  const reservationDate = useMemo(() => {
-    if (!reservation) {
-      return null;
-    }
-  
-    const start = new Date(reservation.startDate);
-    const end = new Date(reservation.endDate);
-
-    return `${format(start, 'PP')} - ${format(end, 'PP')}`;
-  }, [reservation]);
+  const handleClick = useCallback(() => {
+    router.push(`/listings/${data.id}`);
+  }, [router, data.id]);
 
   return (
     <div 
-      onClick={() => router.push(`/listings/${data.id}`)} 
+      onClick={handleClick}
       className="col-span-1 cursor-pointer group"
     >
       <div className="flex flex-col gap-2 w-full">
@@ -95,44 +41,30 @@ const ListingCard: React.FC<ListingCardProps> = ({
               transition
             "
             src={data.imageSrc}
-            alt="Listing"
+            alt={data.title}
           />
-          <div className="
-            absolute
-            top-3
-            right-3
-          ">
-            <HeartButton 
-              listingId={data.id} 
-              currentUser={currentUser}
-            />
-          </div>
         </div>
         <div className="font-semibold text-lg">
-          {location?.region}, {location?.label}
+          {data.title}
         </div>
         <div className="font-light text-neutral-500">
-          {reservationDate || data.category}
+          {data.locationValue}
         </div>
         <div className="flex flex-row items-center gap-1">
           <div className="font-semibold">
-            $ {price}
+            ${data.price}
           </div>
-          {!reservation && (
-            <div className="font-light">night</div>
-          )}
+          <div className="font-light">night</div>
         </div>
-        {onAction && actionLabel && (
-          <Button
-            disabled={disabled}
-            small
-            label={actionLabel} 
-            onClick={handleCancel}
-          />
-        )}
+        <div className="font-light text-sm">
+          {data.roomCount} beds • {data.bathroomCount} baths • {data.guestCount} guests
+        </div>
+        <div className="font-light text-sm">
+          {data.category}
+        </div>
       </div>
     </div>
-   );
+  );
 }
  
 export default ListingCard;

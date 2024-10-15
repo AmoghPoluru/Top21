@@ -46,20 +46,28 @@ model Account {
 }
 
 model Listing {
-  id             String @id @default(auto()) @map("_id") @db.ObjectId
-  title String
-  description String
-  imageSrc String
-  createdAt DateTime @default(now())
-  category  String
-  roomCount Int
-  bathroomCount Int
-  guestCount Int
-  locationValue String
-  userId String @db.ObjectId
-  price Int
-
-  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  id             String   @id @default(auto()) @map("_id") @db.ObjectId
+  title          String
+  description    String
+  imageSrc   String
+  additionalImages String[]
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+  category       String
+  roomCount      Int
+  bathroomCount  Int
+  guestCount     Int
+  locationValue  String
+  userId         String   @db.ObjectId
+  price          Int
+  amenities      String[]
+  houseRules     String[]
+  availableDates DateTime[]
+  rating         Float?
+  reviewCount    Int      @default(0)
+  isActive       Boolean  @default(true)
+  coordinates    Json?    // For storing latitude and longitude
+   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
   reservations Reservation[]
 }
 

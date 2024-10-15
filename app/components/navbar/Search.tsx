@@ -1,128 +1,58 @@
 'use client';
 
-import { useSearchParams } from 'next/navigation';
-import { useMemo } from 'react';
+import { useState } from 'react';
 import { BiSearch } from 'react-icons/bi';
-import { differenceInDays } from 'date-fns';
-
-import useSearchModal from '@/app/hooks/useSearchModal';
-import useCountries from '@/app/hooks/useCountries';
+import { useRouter } from 'next/navigation';
+import { useSearch } from '@/app/contexts/SearchContext';
 
 const Search = () => {
-  const searchModal = useSearchModal();
-  const params = useSearchParams();
-  const { getByValue } = useCountries();
+  const router = useRouter();
+  const { searchQuery, setSearchQuery } = useSearch();
+  const [listingType, setListingType] = useState('Housing');
+  const [buyRentOption, setBuyRentOption] = useState('Buy');
 
-  const  locationValue = params?.get('locationValue'); 
-  const  startDate = params?.get('startDate');
-  const  endDate = params?.get('endDate');
-  const  guestCount = params?.get('guestCount');
-
-  const locationLabel = useMemo(() => {
-    if (locationValue) {
-      return getByValue(locationValue as string)?.label;
+  const handleSearch = (event: React.FormEvent) => {
+    event.preventDefault();
+    if (searchQuery) {
+      router.push(`/search?query=${encodeURIComponent(searchQuery)}&type=${encodeURIComponent(listingType)}&option=${encodeURIComponent(buyRentOption)}`);
     }
+  };
 
-    return 'Anywhere';
-  }, [locationValue, getByValue]);
-
-  const durationLabel = useMemo(() => {
-    if (startDate && endDate) {
-      const start = new Date(startDate as string);
-      const end = new Date(endDate as string);
-      let diff = differenceInDays(end, start);
-
-      if (diff === 0) {
-        diff = 1;
-      }
-
-      return `${diff} Days`;
-    }
-
-    return 'Any Week'
-  }, [startDate, endDate]);
-
-  const guestLabel = useMemo(() => {
-    if (guestCount) {
-      return `${guestCount} Guests`;
-    }
-
-    return 'Add Guests';
-  }, [guestCount]);
-
-  return ( 
-    <div
-      onClick={searchModal.onOpen}
-      className="
-        border-[1px] 
-        w-full 
-        md:w-auto 
-        py-2 
-        rounded-full 
-        shadow-sm 
-        hover:shadow-md 
-        transition 
-        cursor-pointer
-      "
-    >
-      <div 
-        className="
-          flex 
-          flex-row 
-          items-center 
-          justify-between
-        "
-      >
-        <div 
-          className="
-            text-sm 
-            font-semibold 
-            px-6
-          "
+  return (
+    <div className="border-[1px] w-full md:w-auto py-2 rounded-full shadow-sm hover:shadow-md transition cursor-pointer">
+      <form onSubmit={handleSearch} className="flex flex-row items-center justify-between">
+        <select
+          value={listingType}
+          onChange={(e) => setListingType(e.target.value)}
+          className="appearance-none bg-transparent border-r border-gray-300 text-gray-700 py-2 px-4 pr-8 leading-tight focus:outline-none focus:bg-white focus:border-gray-500"
         >
-          {locationLabel}
-        </div>
-        <div 
-          className="
-            hidden 
-            sm:block 
-            text-sm 
-            font-semibold 
-            px-6 
-            border-x-[1px] 
-            flex-1 
-            text-center
-          "
+          <option>Housing</option>
+          <option>Business</option>
+          <option>Franchise</option>
+        </select>
+        
+        <select
+          value={buyRentOption}
+          onChange={(e) => setBuyRentOption(e.target.value)}
+          className="appearance-none bg-transparent border-r border-gray-300 text-gray-700 py-2 px-4 pr-8 leading-tight focus:outline-none focus:bg-white focus:border-gray-500"
         >
-          {durationLabel}
-        </div>
-        <div 
-          className="
-            text-sm 
-            pl-6 
-            pr-2 
-            text-gray-600 
-            flex 
-            flex-row 
-            items-center 
-            gap-3
-          "
-        >
-          <div className="hidden sm:block">{guestLabel}</div>
-          <div 
-            className="
-              p-2 
-              bg-rose-500 
-              rounded-full 
-              text-white
-            "
-          >
-            <BiSearch size={18} />
-          </div>
-        </div>
-      </div>
+          <option>Buy</option>
+          <option>Rent</option>
+        </select>
+        
+        <input
+          className="text-sm font-semibold px-6 w-full outline-none bg-transparent"
+          type="text"
+          placeholder="Place, Neighborhood"
+          value={searchQuery}
+          onChange={(e) => setSearchQuery(e.target.value)}
+        />
+        <button type="submit" className="p-2 bg-rose-500 rounded-full text-white mr-2">
+          <BiSearch size={18} />
+        </button>
+      </form>
     </div>
   );
 }
- 
+
 export default Search;
